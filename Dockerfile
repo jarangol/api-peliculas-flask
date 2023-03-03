@@ -19,6 +19,7 @@ ENV PORT 5000
 # init bd and create schemas
 RUN flask db init
 RUN flask db revision --rev-id 584a053c5616
+RUN flask db stamp head
 RUN flask db migrate
 RUN flask db upgrade
  
