@@ -24,7 +24,7 @@ class FilmListResource(Resource):
                     )
         for actor in film_dict['actors']:
             film.actors.append(Actor(actor['name']))
-            film.save()
+        film.save()
         resp = film_schema.dump(film)
         return resp, 201
 
@@ -35,6 +35,26 @@ class FilmResource(Resource):
         resp = film_schema.dump(film)
         return resp
 
+    def put(self, film_id):
+        data = request.get_json()
+        film_dict = film_schema.load(data)
+        film = Film.get_by_id(film_id)
+        film.title = film_dict['title']
+        film.length = film_dict['length']
+        film.year = film_dict['year']
+        film.director = film_dict['director']
+        for actor in film_dict['actors']:
+            film.actors.append(Actor(actor['name']))
+        film.save()
+        resp = film_schema.dump(film)
+
+        return resp, 201
+
+    def delete(self, film_id):
+        film = Film.get_by_id(film_id)
+        film.delete()
+        resp = film_schema.dump(film)
+        return resp
 
 api.add_resource(FilmListResource, '/api/v1.0/films/',
                  endpoint='film_list_resource')
